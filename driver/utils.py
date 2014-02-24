@@ -36,6 +36,11 @@ elfSectionName='.llvm_bc'
 
 # Internal logger
 _logger = logging.getLogger(__name__)
+_logger_handler=logging.FileHandler("/tmp/wllvm.log")
+formatter = logging.Formatter('%(levelname)s: %(message)s')
+_logger_handler.setFormatter(formatter)
+_logger.addHandler(_logger_handler)
+_logger.setLevel(logging.WARNING)
 
 # This class applies filters to GCC argument lists.  It has a few
 # default arguments that it records, but does not modify the argument
@@ -244,7 +249,7 @@ def attachBitcodePathToObject(bcPath, outFileName):
     # that won't work.
     (root, ext) = os.path.splitext(outFileName)
     if ext not in ('.o', '.lo', '.os'):
-        _logger.warning('Cannot attach bitcode path to "{0}"'.format(outFileName))
+        _logger.warning('>>>>> Cannot attach bitcode path to "{0}"'.format(outFileName))
         return
 
     # Now just build a temporary text file with the full path to the
@@ -322,8 +327,7 @@ class ClangBuilder(BuilderBase):
 
     def getBitcodeFileName(self, argFilter):
         (dirs, baseFile) = os.path.split(argFilter.getOutputFilename())
-        bcfilename = os.path.join(dirs, '.{0}.bc'.format(baseFile))
-
+        bcfilename = os.path.join(dirs, '{0}.wllvm.bc'.format(baseFile))
         return bcfilename
 
     def extraBitcodeArgs(self, argFilter):
@@ -395,6 +399,9 @@ def getBuilder(cmd, isCxx):
 def buildObject(builder):
     objCompiler = builder.getCompiler()
     objCompiler.extend(builder.cmd)
+
+    _logger.warning(' '.join(objCompiler))
+
     proc = Popen(objCompiler)
     rc = proc.wait()
     if rc != 0:
