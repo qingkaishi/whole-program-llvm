@@ -38,6 +38,7 @@ except NameError:
 bitCodeArchiveExtension='bca'
 moduleExtension='bc'
 
+
 # Use objdump on the provided binary; parse out the fields
 # to find the given section.  Return the size and offset of
 # that section (in bytes)
@@ -101,7 +102,7 @@ def handleExecutable(inputFile, llvmLinker, outputFile=None):
     if outputFile == None:
       outputFile = inputFile + '.' + moduleExtension
 
-    logging.debug('Found the following file names from ELF header:\n' + pprint.pformat(fileNames))
+    logging.critical('Found the following file names from ELF header:\n' + pprint.pformat(fileNames))
     linkCmd = [ llvmLinker, '-o', outputFile ]
     linkCmd.extend([x for x in fileNames if x != ''])
     logging.info('Writing output to {0}'.format(outputFile))

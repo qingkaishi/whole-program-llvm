@@ -35,7 +35,7 @@ llvmCompilerPathEnv = 'LLVM_COMPILER_PATH'
 elfSectionName='.llvm_bc'
 
 # Internal logger
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger()
 _logger_handler=logging.FileHandler("/tmp/wllvm.log")
 formatter = logging.Formatter('%(levelname)s: %(message)s')
 _logger_handler.setFormatter(formatter)
