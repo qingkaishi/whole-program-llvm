@@ -50,7 +50,7 @@ def getSectionSizeAndOffset(sectionName, filename):
         logging.error('Could not dump %s' % filename)
         sys.exit(-1)
 
-    for line in [l.decode() for l in objdumpOutput.splitlines()] :
+    for line in [l.decode('utf8') for l in objdumpOutput.splitlines()] :
         fields = line.split()
         if len(fields) <= 7:
             continue
