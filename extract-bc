@@ -102,6 +102,8 @@ def handleExecutable(inputFile, llvmLinker, outputFile=None):
     if outputFile == None:
       outputFile = inputFile + '.' + moduleExtension
 
+    # Note that not all bitcode files of each lib.a will be linked, 
+    # unless they are used in the executable binary file.
     logging.critical('Found the following file names from ELF header:\n' + pprint.pformat(fileNames))
     linkCmd = [ llvmLinker, '-o', outputFile ]
     linkCmd.extend([x for x in fileNames if x != ''])
