@@ -226,7 +226,7 @@ class FileType(object):
 
       fileP = Popen(['file',fileName], stdout=PIPE)
       output = fileP.communicate()[0]
-      output = output.decode()
+      output = output.decode('utf8')
       if 'ELF' in output and 'executable' in output:
           return cls.EXECUTABLE
       elif 'current ar archive' in output:
@@ -246,7 +246,7 @@ class FileType(object):
 FileType.init()
 
 def attachBitcodePathToObject(bcPath, outFileName):
-    if os.path.isfile(outFileName):
+    if not os.path.isfile(outFileName):
         _logger.critical('***** "{0}" output file not exists. Please debug!'.format(outFileName))
         sys.exit(0)
 
@@ -261,7 +261,7 @@ def attachBitcodePathToObject(bcPath, outFileName):
     # bitcode file that we'll write into the object file.
     f = tempfile.NamedTemporaryFile(mode='w+b', delete=False)
     absBcPath = os.path.abspath(bcPath)
-    f.write(absBcPath.encode())
+    f.write(absBcPath.decode('utf8').encode('utf8'))
     f.write('\n'.encode())
     _logger.debug(pprint.pformat('Wrote "{0}" to file "{1}"'.format(absBcPath, f.name)))
 
