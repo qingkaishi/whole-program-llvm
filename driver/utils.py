@@ -196,8 +196,9 @@ class ArgumentListFilter(object):
         if self.outputFilename is not None:
             return self.outputFilename
         elif self.isCompileOnly:
-            (root, ext) = os.path.splitext(self.inputFiles[0])
-            return '{0}.o'.format(root)
+            (inputFilesDir, inputFilesName) = os.path.split(self.inputFiles[0])
+            (root, ext) = os.path.splitext(inputFilesName)
+            return '{0}/{1}.o'.format(os.getcwd(), root) # the directory should be the current one, not the input file's.
         else:
             return 'a.out'
 
@@ -245,6 +246,10 @@ class FileType(object):
 FileType.init()
 
 def attachBitcodePathToObject(bcPath, outFileName):
+    if os.path.isfile(outFileName):
+        _logger.critical('***** "{0}" output file not exists. Please debug!'.format(outFileName))
+        sys.exit(0)
+
     # Don't try to attach a bitcode path to a binary.  Unfortunately
     # that won't work.
     (root, ext) = os.path.splitext(outFileName)
